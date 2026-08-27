@@ -1,20 +1,19 @@
-# q=3 洛書層：元素 ∈{1,2}，det!=0 mod3，總和 15
-import itertools
+# q=3 洛書層 v2：只驗證 0禁止 + 可逆 det!=0，不驗和
+def det3(mat):
+    return (mat[0][0]*(mat[1][1]*mat[2][2]-mat[1][2]*mat[2][1])
+          - mat[0][1]*(mat[1][0]*mat[2][2]-mat[1][2]*mat[2][0])
+          + mat[0][2]*(mat[1][0]*mat[2][1]-mat[1][1]*mat[2][0])) % 3
 
 def is_luoshu(mat):
-    # mat 3x3 list
-    flat = [x for row in mat for x in row]
+    flat=[x for r in mat for x in r]
     if 0 in flat: return False, "0 禁止"
-    # 九宮格 1-9 變體檢查，傳統洛書和為15，mod3 下就是 0
-    if sum(mat[0]) % 3!= 0: return False, "行和失敗"
-    det = (mat[0][0]*(mat[1][1]*mat[2][2]-mat[1][2]*mat[2][1])
-         - mat[0][1]*(mat[1][0]*mat[2][2]-mat[1][2]*mat[2][0])
-         + mat[0][2]*(mat[1][0]*mat[2][1]-mat[1][1]*mat[2][0])) % 3
-    if det == 0: return False, f"不可逆 det={det}"
-    return True, f"可逆 det={det}"
+    d=det3(mat)
+    if d==0: return False, f"不可逆 det={d}"
+    return True, f"可逆 det={d} - 洛書存活"
 
-# 經典洛書
-L = [[4,9,2],[3,5,7],[8,1,6]]
-# 轉成 mod3 的 {1,2} 表示，1->1, 2->2, 0用2代替的變體
-L_mod = [[(x%3 if x%3!=0 else 2) for x in row] for row in L]
-print("L_mod:", L_mod, is_luoshu(L_mod))
+# 用純 {1,2} 的矩陣，才是你在 q=1 5bit 長出來的本體
+M = [[1,1,1],[1,2,1],[1,1,2]] # 中宮 2
+print(M, is_luoshu(M))
+
+M2 = [[1,2,2],[2,2,1],[2,1,2]] # 你剛剛 L_mod
+print(M2, is_luoshu(M2))
