@@ -1,0 +1,66 @@
+# NOTE: 本檔位於 ci/verify.yml (非 .github/workflows/), 因 API token 缺 workflow scope。
+# 啟用方式 (本地執行):
+#   mkdir -p .github/workflows && cp ci/verify.yml .github/workflows/verify.yml && git add . && git commit -m 'ci: enable' && git push
+
+name: verify_all
+
+on:
+  push:
+    branches:
+      - main
+      - 'verify/**'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  self-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: verify_all.py (q1 + q3 + q-inf + bits + cnt + q4)
+        run: |
+          if [ -f verify_all.py ]; then
+            python verify_all.py
+          else
+            echo "verify_all.py not found; skipping"
+          fi
+
+      - name: q4-affine self-test
+        run: |
+          if [ -f q4-affine/agl1_4096.py ]; then
+            python q4-affine/agl1_4096.py
+          else
+            echo "q4-affine/agl1_4096.py not found; skipping"
+          fi
+
+      - name: q4-affine orbits self-test
+        run: |
+          if [ -f q4-affine/orbits.py ]; then
+            python q4-affine/orbits.py
+          else
+            echo "q4-affine/orbits.py not found; skipping"
+          fi
+
+      - name: q5-stacked-boards self-test
+        run: python q5-stacked-boards/board_stack.py
+
+      - name: Hash receipt (SHA-256 per .py)
+        run: |
+          echo "=== SHA-256 receipts (KERNEL §19.7 D14 每 bit 哈希化) ==="
+          find . -name '*.py' -not -path './.git/*' -not -path './__pycache__/*' \
+            -exec sha256sum {} \; | sort
+
+      - name: Commit SHA receipt
+        run: |
+          echo "branch: ${GITHUB_REF_NAME}"
+          echo "commit: ${GITHUB_SHA}"
+          echo "session: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
