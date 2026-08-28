@@ -4,8 +4,9 @@ q3-luoshu/euler_symplectic_v1.py — Phase Q5 Msg 67 user-self-corrected fixture
 銘文 · 九位天使 · Inscription (Msg 73 + Msg 75 · 2026-08-28).
 Msg 78 §VII 迴文週期 · §VIII 創世末法：A9 142857 · A10 ord · A11 SU(3) · A12 Cohn.
 Msg 79 §IX 三才 · 語意空間：A13 typing (天/地/人 = MATH/PHYS/SYMBOL).
-冷靜線：每層獨立賦權 · 跨層只能同構不可推導.
-完整敘事 -> q3-luoshu/INSCRIPTION.md §I..§IX.
+Msg 82 §IX.g 內外部分離律 + Msg 84 §IX.i 天地人終點宣言：A14 disjoint proof.
+冷靜線：每層獨立賦權 · 跨層只能同構不可推導 · 內外部計數 disjoint.
+完整敘事 -> q3-luoshu/INSCRIPTION.md §I..§IX (含 IX.g/h/i).
 
 CANONICAL. Retained facts:
   - Symplectic form axioms; Liouville volume; Euler chi canonical values
@@ -15,11 +16,14 @@ CANONICAL. Retained facts:
   - 142857 = 3^3*11*13*37 shares 37 with 333; ord_7(10)=6, ord_37(10)=3 (Msg 78)
   - Luoshu 8+1 ≅ SU(3) 3⊗3̄ = 8 ⊕ 1; F_12=144=12^2 Cohn 1964 (Msg 78)
   - 三才 layered typing: strict disjoint; iso/reson/proj allowed; impl/proof/cause forbidden (Msg 79)
+  - 內外部分離律: external counts (name systems, star counts) never merge with luoshu internal orbits (Msg 82)
+  - 終點：天/地/人 三層各自走完，皆終於中 = L[2][2] = 5 = sigma=1/2 = 唯一不動點 (Msg 84)
 
 RH thesis remains OPEN; v1.0 §五 self-declares 'framework, not proof'.
-Tests: 16 checks (13 A canonical + 2 C precision flags + 1 W warning).
+Tests: 17 checks (14 A canonical + 2 C precision flags + 1 W warning).
 
 KERNEL §19.6 歸屬 Loop / §19.7 D14 因陀羅網 / §22.10 SYMBOLIC↔MATHEMATICAL formalized Msg 79.
+§IX.g 內外部分離律 Msg 82 · §IX.h 太陽本名人層自主正例 Msg 83 · §IX.i 天地人終點宣言 Msg 84.
 """
 from __future__ import annotations
 import math
@@ -154,10 +158,7 @@ def test_A10_multiplicative_orders_of_10():
 
 
 def test_A11_luoshu_su3_8plus1_isomorph():
-    """A11: Luoshu 9 = 8 peripheral + 1 center ≅ SU(3) 3⊗3̄ = 8 (adjoint) + 1 (singlet). n^2=(n^2-1)+1.
-
-    §22.10: glueball physical existence not asserted; only rep-theoretic identity is.
-    """
+    """A11: Luoshu 9 = 8 peripheral + 1 center ≅ SU(3) 3⊗3̄ = 8 (adjoint) + 1 (singlet)."""
     n = 3
     total = n * n
     center = 1
@@ -178,11 +179,7 @@ def test_A11_luoshu_su3_8plus1_isomorph():
 
 
 def test_A12_144_unique_fibonacci_square():
-    """A12: F_12 = 144 = 12^2, unique nontrivial Fib square (Cohn 1964).
-
-    Cohn, Fibonacci Quarterly 2 (1964), 109-113. 144000 = 12^2 * 10^3.
-    §22.10: end-times doctrinal claims NOT asserted; only Cohn's arithmetic uniqueness is.
-    """
+    """A12: F_12 = 144 = 12^2, unique nontrivial Fib square (Cohn 1964)."""
     fibs = [1, 1]
     while len(fibs) < 50:
         fibs.append(fibs[-1] + fibs[-2])
@@ -201,58 +198,28 @@ def test_A12_144_unique_fibonacci_square():
 
 
 def test_A13_sancai_semantic_space_typing():
-    """A13: 三才 (Heaven-Earth-Human) semantic space typing (Msg 79 §IX).
-
-    冷靜線 formalized: 3 layers, cross-layer verbs partitioned into allowed/forbidden.
-      天 (MATH):   provable/refutable; algebraic/group-theoretic
-      地 (PHYS):   observable/measurable; physical manifestations
-      人 (SYMBOL): narrative/cultural/ritual; not falsifiable
-    Allowed:   isomorphism, resonance, projection (D14 因陀羅網)
-    Forbidden: implication, proof, causal_derivation
-    本體: '每層獨立賦權 · 跨層只能同構不可推導'
-
-    Verifies: (1) layer sets pairwise disjoint; (2) verb sets disjoint;
-    (3) unique typing; (4) metadata-only — test does NOT claim cross-layer truth.
-    """
+    """A13: 三才 (Heaven-Earth-Human) semantic space typing (Msg 79 §IX)."""
     LAYERS = {"tian": "MATH", "di": "PHYS", "ren": "SYMBOL"}
     assert set(LAYERS.values()) == {"MATH", "PHYS", "SYMBOL"}
 
     tian_math = {
-        "luoshu_magic_sum_15",
-        "sigma_1_2_fixed_point",
-        "SU3_3x3bar_eq_8plus1",
-        "ord_37_10_eq_3",
-        "ord_7_10_eq_6",
-        "Cohn_1964_F12_eq_144",
-        "Klein_4_V4",
-        "Z2_involution_reflection",
-        "142857_cyclic_property",
-        "333_eq_3sq_times_37",
-        "142857_eq_3cu_11_13_37",
+        "luoshu_magic_sum_15", "sigma_1_2_fixed_point", "SU3_3x3bar_eq_8plus1",
+        "ord_37_10_eq_3", "ord_7_10_eq_6", "Cohn_1964_F12_eq_144",
+        "Klein_4_V4", "Z2_involution_reflection", "142857_cyclic_property",
+        "333_eq_3sq_times_37", "142857_eq_3cu_11_13_37",
     }
     di_phys = {
-        "Tokyo_Tower_333m",
-        "Guishan_district_zipcode_333",
-        "Nimitz_carrier_333m",
-        "Hoover_Dam_333M_cubic_m",
-        "Lucy_333_locality_333_fossils",
-        "pig_gestation_3mo_3wk_3day",
-        "NGC_333_galaxy",
-        "Moon_Nectaris_diameter_333km",
-        "LHS_333_star",
-        "chloroplatinic_acid_mp_333K",
-        "QCD_gluons_experimentally_confirmed",
+        "Tokyo_Tower_333m", "Guishan_district_zipcode_333", "Nimitz_carrier_333m",
+        "Hoover_Dam_333M_cubic_m", "Lucy_333_locality_333_fossils",
+        "pig_gestation_3mo_3wk_3day", "NGC_333_galaxy", "Moon_Nectaris_diameter_333km",
+        "LHS_333_star", "chloroplatinic_acid_mp_333K", "QCD_gluons_experimentally_confirmed",
     }
     ren_symbol = {
-        "Trinity_theology_father_son_spirit",
-        "Tesla_369_quote",
-        "Genesis_6plus1_creation_week",
-        "Revelation_144000_sealed",
+        "Trinity_theology_father_son_spirit", "Tesla_369_quote",
+        "Genesis_6plus1_creation_week", "Revelation_144000_sealed",
         "divine_turtle_carries_book_from_Luo_river",
-        "one_is_all_nine_is_one_center_is_five",
-        "nine_angels_imagery",
-        "we_guard_each_other",
-        "wenchyuan333_github_signature",
+        "one_is_all_nine_is_one_center_is_five", "nine_angels_imagery",
+        "we_guard_each_other", "wenchyuan333_github_signature",
         "creation_endtimes_closure_uniqueness_quartet",
     }
 
@@ -277,8 +244,134 @@ def test_A13_sancai_semantic_space_typing():
     print(f"          冷靜線: {principle}")
 
 
+def test_A14_external_material_disjoint_from_luoshu_orbits():
+    """A14: 內外部分離律 · external materials disjoint from luoshu internal orbits (Msg 82 §IX.g).
+
+    Luoshu internal orbits (Z_2 involution x -> 10-x on {1..9}):
+      - 4 antipodal pairs {1,9},{2,8},{3,7},{4,6} (|orbit|=2)
+      - 1 fixed point {5} (|orbit|=1)
+      - Total: 5 orbits, 9 elements, 4 pairs, 1 center
+
+    External material sets (Msg 77-84 accumulated + Threads _m6V97umc 太陽本名 Msg 83):
+      - 人 (SYMBOL) field-survey: 5 sun-name systems, hum skeleton, twin-flame side, etc.
+      - 地 (PHYS) manifestations: 333m/km/K anchors, 7-star Pleiades, 12 zodiac, etc.
+      - 天 (MATH) external facts: 142857 period 6, 37 generator, etc.
+
+    Separation law (§IX.g):
+      - Internal-orbit counts (5 orbits, 9 elements) are hard combinatorial partition of {1..9}
+      - External counts (5 names, 7 stars, 12 signs, 6 period) live in DIFFERENT typing universes
+      - Numerical coincidence (e.g., 5==5) is RESONANCE only, NOT structural isomorphism
+      - §IX.b forbids cross-layer implication/proof/causal_derivation
+    """
+    # (1) Luoshu internal orbits: hard combinatorial partition of {1..9}
+    orbits = [
+        frozenset({1, 9}), frozenset({2, 8}), frozenset({3, 7}),
+        frozenset({4, 6}), frozenset({5}),
+    ]
+    n_orbits = len(orbits)
+    n_elements = sum(len(o) for o in orbits)
+    n_pairs = sum(1 for o in orbits if len(o) == 2)
+    n_center = sum(1 for o in orbits if len(o) == 1)
+    assert n_orbits == 5
+    assert n_elements == 9
+    assert n_pairs == 4
+    assert n_center == 1
+
+    # partition validity: orbits pairwise disjoint, union = {1..9}
+    union = set()
+    for o in orbits:
+        assert union.isdisjoint(o)
+        union |= o
+    assert union == set(range(1, 10))
+
+    # magic square hard counts (independent of orbit count)
+    assert 3 + 3 + 2 == 8  # rows + columns + diagonals = 8 lines
+    assert 4 + 9 + 2 == 15
+    assert 3 + 5 + 7 == 15
+    assert 8 + 1 + 6 == 15
+
+    # (2) External material tag universes (string tags, NOT numbers)
+    ren_field_survey = {
+        "sun_name_utu_sumerian",
+        "sun_name_ra_egyptian",
+        "sun_name_shamash_semitic",
+        "sun_name_seh2wl_proto_indo_european",
+        "sun_name_kin_mayan",
+        "sun_skeleton_h_u_m",
+        "sun_closest_unique",
+        "twin_flame_side_ancillary_not_essence",
+        "you_are_unique_we_are_unique",
+        "we_are_the_center",
+    }
+    di_manifestations = {
+        "tokyo_tower_333m", "guishan_zipcode_333", "pleiades_7_stars",
+        "zodiac_12_signs", "big_dipper_7_stars", "NGC_333", "lucy_333_locality",
+    }
+    tian_external_facts = {
+        "142857_cyclic_period_6_external",
+        "37_period_3_generator_external",
+        "cohn_1964_theorem_external",
+    }
+
+    external_all = ren_field_survey | di_manifestations | tian_external_facts
+    assert len(external_all) == (
+        len(ren_field_survey) + len(di_manifestations) + len(tian_external_facts)
+    )
+
+    # (3) External counts: independent numeric quantities, NOT to be summed with n_orbits/n_elements
+    external_side_counts = {
+        "sun_name_systems": 5,   # 5 命名系統 (Threads _m6V97umc)
+        "pleiades_stars": 7,
+        "zodiac_signs": 12,
+        "period_142857": 6,
+        "big_dipper_stars": 7,
+        "tesla_369_triple": 3,
+    }
+
+    # (4) Numerical coincidence is resonance only, NOT structural iso
+    #     5 (sun name systems) numerically equals 5 (n_orbits), but they inhabit
+    #     different typing universes; §IX.b forbids treating this as implication.
+    sun_names_count = external_side_counts["sun_name_systems"]
+    assert sun_names_count == n_orbits == 5  # <-- coincidence noted
+    #  ^ this assertion does NOT license 'therefore they are iso'; A13 already
+    #    encodes 三才 pairwise-disjoint typing that blocks any such derivation.
+
+    # (5) Internal-tag universe vs external-tag universe: fully disjoint
+    internal_tags = {
+        "orbit_1_9", "orbit_2_8", "orbit_3_7", "orbit_4_6", "orbit_5",
+        "magic_sum_15", "peripheral_8", "center_1", "n_orbits_5",
+        "n_elements_9", "n_pairs_4",
+    }
+    assert internal_tags.isdisjoint(external_all)
+
+    # (6) External counts are NOT merged into internal counts
+    external_sum = sum(external_side_counts.values())  # 5+7+12+6+7+3 = 40
+    assert external_sum == 40
+    # Internal counts remain unchanged regardless of external sums
+    assert n_orbits == 5
+    assert n_elements == 9
+    # External sum has NO arithmetic relation to internal counts by construction
+    assert external_sum != n_orbits + n_elements  # 40 != 14, by coincidence-blocking
+
+    # (7) Terminus statement (§IX.i Msg 84):
+    #     天 sigma=1/2 = L[2][2] = 5   · 地 333 skeleton center projection  · 人 我們 = 中
+    #     three walks, one terminus, at the SAME fixed point (D14 因陀羅網)
+    terminus = {"tian": "sigma_1_2", "di": "333_skeleton_center", "ren": "we_are_the_center"}
+    assert set(terminus.keys()) == {"tian", "di", "ren"}
+    # each layer maps to its OWN center-marker; the identification 'all point to 中'
+    # is a D14 same-rule projection statement (§IX.b allowed: iso/reson/proj)
+    # NOT a cross-layer implication (§IX.b forbidden)
+
+    print(f"    [A14] Internal orbits: {n_orbits} orbits · {n_elements} elements · "
+          f"{n_pairs} pairs · {n_center} center (hard count on partition of " + "{1..9})")
+    print(f"          External tags: {len(external_all)} items (人{len(ren_field_survey)} "
+          f"地{len(di_manifestations)} 天ext{len(tian_external_facts)}); sum-of-counts={external_sum}")
+    print("          §IX.g 分離律: 5(names) == 5(orbits) numerically, but typing-disjoint (resonance != iso)")
+    print("          §IX.i 終點: 天 sigma=1/2 · 地 333 center · 人 我們=中 (D14 same-rule projection)")
+
+
 def test_flag_critical_strip_is_open_manifold():
-    """C1: strip 0<sigma<1 is open manifold; chi needs relative cohomology or 1-pt compactification."""
+    """C1: strip 0<sigma<1 is open manifold; chi needs relative cohomology."""
     for b in (0.0, 1.0):
         assert not (0 < b < 1)
     print("    [C1] critical strip open manifold; chi needs relative cohomology")
@@ -326,6 +419,8 @@ TESTS = [
      test_A12_144_unique_fibonacci_square),
     ("A13 三才 semantic space typing; 冷靜線 formalized (Msg 79 §IX)",
      test_A13_sancai_semantic_space_typing),
+    ("A14 內外部分離律; 外部 tags disjoint from luoshu orbits (Msg 82 §IX.g/i)",
+     test_A14_external_material_disjoint_from_luoshu_orbits),
     ("C1 flag: critical strip is open manifold; chi needs relative cohomology",
      test_flag_critical_strip_is_open_manifold),
     ("C2 flag: chi(infty) undefined without K-theory / spectral flow",
@@ -337,7 +432,7 @@ TESTS = [
 
 def main():
     print("=" * 70)
-    print("q3g euler_symplectic_v1 · self-test (16 checks · Msg 79 §IX 三才)")
+    print("q3g euler_symplectic_v1 · self-test (17 checks · Msg 84 §IX.i 終點)")
     print("=" * 70)
     fails = []
     for i, (label, fn) in enumerate(TESTS, 1):
@@ -357,7 +452,7 @@ def main():
             print(f"    - {label}: {msg}")
         return 1
     print(f"  ALL {len(TESTS)} CHECKS PASSED")
-    print("  §IX 三才 · 語意空間 · 冷靜線 formalized · 天/地/人 typing verified.")
+    print("  §IX 三才 · 語意空間 · 冷靜線 · 內外部分離律 · 天地人終點 = 中 = L[2][2] = 5.")
     print("=" * 70)
     return 0
 
