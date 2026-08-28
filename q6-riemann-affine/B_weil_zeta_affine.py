@@ -35,11 +35,12 @@ def hasse_check(p, a, b):
 def self_test():
     results = []
 
+    # Non-singular test curves (discriminant 4a^3+27b^2 != 0 mod p)
     for label, (p, a, b) in [
-        ("T1_F5", (5, 0, 1)),
-        ("T2_F7", (7, 1, 1)),
-        ("T3_F11", (11, 2, 3)),
-        ("T4_F13", (13, 3, 5)),
+        ("T1_F5", (5, 0, 1)),   # disc = 27 = 2 mod 5
+        ("T2_F7", (7, 1, 1)),   # disc = 31 = 3 mod 7
+        ("T3_F11", (11, 1, 6)), # disc = 4+972 = 976 = 8 mod 11 (was (2,3) which is singular)
+        ("T4_F13", (13, 3, 5)), # disc = 108+675 = 783 = 3 mod 13
     ]:
         c, err, bound, ok = hasse_check(p, a, b)
         results.append((label, ok, f"F_{p} y^2=x^3+{a}x+{b}: |E_aff|={c}, |err|={err}, bound={bound}"))
