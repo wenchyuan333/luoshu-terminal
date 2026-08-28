@@ -6,7 +6,7 @@ w.chyuan's own v1.0 「保序雙射解析版｜嚴格修正版」
 
 CANONICAL classification: this is the user's own correction after absorbing
 the critique of Msg 61 (集合雙射 != 群同構). v1.0 EXPLICITLY WITHDRAWS:
-  - GL(3, F_3) as common algebraic base (proven false)
+  - GL(3, F_3) as common algebraic base (not established)
   - Lo Shu 'forces' sigma = 1/2 (analogy != proof)
   - Four-way group isomorphism (orders 8, 4, 2, 11232 all distinct)
 
@@ -53,19 +53,14 @@ RIEMANN_T_FIRST_9 = [
 # --- A. CANONICAL (v1.0 retained claims) --------------------------------
 
 def test_v1_position_lookup_matches_L0():
-    """v1.0 table position (row, col) must match L0[row-1][col-1] = L value.
-    User corrected: entry 1 position changed to (3,2)=1 to remove duplicates.
-    """
+    """v1.0 table position (row, col) must match L0[row-1][col-1] = L value."""
     for L_val, r, c, _ in V1_TABLE:
         got = L0[r-1][c-1]
         assert got == L_val, f"v1.0 says L={L_val} at ({r},{c}) but L0 gives {got}"
 
 
 def test_order_preserving_bijection():
-    """L values 1..9 strictly increasing iff t_i strictly increasing.
-    Trivially holds because both are totally ordered sets of size 9
-    listed in natural order; test formalizes the claim anyway.
-    """
+    """L values 1..9 strictly increasing iff t_i strictly increasing."""
     L_vals = [row[0] for row in V1_TABLE]
     t_vals = [row[3] for row in V1_TABLE]
     for i in range(8):
@@ -74,7 +69,7 @@ def test_order_preserving_bijection():
 
 
 def test_v1_t_values_match_odlyzko_within_2dp():
-    """v1.0 t_i values match Odlyzko within 0.01 (same tolerance as Msg 61 fixture)."""
+    """v1.0 t_i values match Odlyzko within 0.01."""
     for (_, _, _, t_v1), t_ref in zip(V1_TABLE, RIEMANN_T_FIRST_9):
         assert abs(t_v1 - t_ref) < 0.01, (
             f"v1.0 t={t_v1} vs Odlyzko {t_ref} (diff {abs(t_v1-t_ref):.6f})"
@@ -86,7 +81,6 @@ def test_opposite_pair_sums_10_and_center_self():
     pairs = [(1,9),(2,8),(3,7),(4,6)]
     for a, b in pairs:
         assert a + b == 10
-    # center: L=5 at (2,2), opposite of itself under (r,c) -> (4-r,4-c)
     assert L0[1][1] == 5
 
 
@@ -99,22 +93,16 @@ def test_rarity_d3_1_71_percent():
 
 
 def test_rarity_d4_0918_percent_resolves_msg61_typo():
-    """d=4: N(4)/|GL(4,F_3)| = 22272/24261120 = 0.0918%.
-
-    RESOLVES Msg 61 CONFLICT: prior material wrote '0.918%' (missing a zero);
-    user's v1.0 Msg 66 gives correct 0.0918%. The Msg 61 riemann_kerr_disproof.py
-    B3 conflict flag is now resolved in favor of 0.0918%.
-    """
+    """d=4: N(4)/|GL(4,F_3)| = 22272/24261120 = 0.0918%."""
     gl4 = (81-1)*(81-3)*(81-9)*(81-27)
     assert gl4 == 24261120
     rarity = 22272 / gl4
     assert abs(rarity - 0.000918) < 1e-5, f"got {rarity*100:.4f}%"
-    # 0.0918% not 0.918% — order of magnitude corrected
     assert abs(rarity - 0.00918) > 0.005
 
 
 def test_tightening_factor_d3_to_d4_18_6():
-    """Tightening: 1.71% / 0.0918% ~ 18.6x (dimension-wise sparsification)."""
+    """Tightening: 1.71% / 0.0918% ~ 18.6x."""
     r3 = 192 / 11232
     r4 = 22272 / 24261120
     ratio = r3 / r4
@@ -124,51 +112,54 @@ def test_tightening_factor_d3_to_d4_18_6():
 # --- B. Withdrawal receipts (v1.0 explicit withdrawals) -----------------
 
 def test_withdraw_group_isomorphism_by_order_mismatch():
-    """v1.0 explicitly withdraws four-way isomorphism.
-    |D_4|=8, |V_4|=4, |Kerr Z_2|=2, |GL(3,F_3)|=11232 — all distinct.
-    """
+    """Distinct finite orders disprove four-way group isomorphism."""
     orders = [8, 4, 2, 11232]
     assert len(set(orders)) == 4, "expected 4 distinct orders"
 
 
-def test_withdraw_gl3_as_common_base():
-    """v1.0 explicitly withdraws GL(3, F_3) as common algebraic base.
-    Rationale: no common substructure to which the other three groups embed;
-    orders are pairwise coprime pattern (8, 4, 2 divides 8 but 11232 does not).
+def test_withdraw_gl3_as_common_base_not_established():
+    """The common-base claim is not established by order arithmetic.
+
+    Previous fixture incorrectly asserted 11232 was not divisible by 8.
+    In fact 11232 is divisible by 8, 4, and 2. Divisibility is only a
+    necessary condition for a subgroup, not evidence of the specific
+    embeddings, actions, or structure-preserving maps required by the claim.
+
+    Therefore this test records two facts without overclaiming:
+      1. the divisibility obstruction does not exist;
+      2. the four groups still cannot be isomorphic because their orders differ.
+    The existence of particular subgroup embeddings is left OPEN until maps
+    and preserved operations are explicitly constructed.
     """
     d4, v4, z2, gl3 = 8, 4, 2, 11232
-    # If GL(3,F_3) were a common base, its order would be divisible by all others
-    assert gl3 % d4 != 0, f"GL(3,F_3) order {gl3} % |D_4| {d4} = {gl3 % d4} (should not be 0 for the false claim)"
+    assert gl3 % d4 == 0
+    assert gl3 % v4 == 0
+    assert gl3 % z2 == 0
+    assert len({d4, v4, z2, gl3}) == 4
+    common_base_status = "NOT_ESTABLISHED"
+    embedding_status = "OPEN"
+    assert common_base_status == "NOT_ESTABLISHED"
+    assert embedding_status == "OPEN"
 
 
 def test_withdraw_lo_shu_forces_sigma_half():
-    """v1.0 explicitly withdraws 'Lo Shu forces sigma=1/2'.
-    Analogy != proof. Klein-four orbit {rho, 1-rho, conj(rho), 1-conj(rho)}
-    is closed under group action for ANY sigma, not just sigma=1/2.
-    """
+    """Analogy != proof; symmetry orbit closure does not force sigma=1/2."""
     for sigma in [0.3, 0.5, 0.7]:
         orbit = {(sigma,), (1-sigma,)}
         assert len(orbit) == (1 if abs(sigma - 0.5) < TOL else 2)
 
 
-# --- C. Minor arithmetic flag (v1.0 has one small error) ----------------
+# --- C. Minor arithmetic flag --------------------------------------------
 
 def test_flag_v1_gl5_order_of_magnitude_error():
-    """v1.0 section 4 writes '|GL(5,F_3)| ~= 4.72 * 10^12'.
-    Actual: (242)(240)(234)(216)(162) = 475,566,474,240 ~ 4.76 * 10^11.
-    Off by exactly one order of magnitude. Documented; does not affect main
-    monotone-decrease trend argument.
-    """
+    """v1.0 section 4 overstates |GL(5,F_3)| by roughly one order."""
     gl5 = 242 * 240 * 234 * 216 * 162
     assert gl5 == 475566474240
-    # v1.0 claims 4.72e12, actual is 4.76e11, off by ~10x
     v1_claim = 4.72e12
     actual = gl5
-    assert v1_claim > actual * 5, f"v1.0 overshoots by ~10x: {v1_claim:.2e} vs {actual:.2e}"
+    assert v1_claim > actual * 5
     print(f"    v1.0 claim: 4.72e12, actual: {gl5} (~4.76e11); off by ~10x")
 
-
-# --- Runner -----------------------------------------------------------
 
 TESTS = [
     ("A1 v1.0 position (row,col) lookups match L0",
@@ -187,11 +178,11 @@ TESTS = [
      test_tightening_factor_d3_to_d4_18_6),
     ("B1 withdraw group isomorphism (orders 8/4/2/11232 all distinct)",
      test_withdraw_group_isomorphism_by_order_mismatch),
-    ("B2 withdraw GL(3,F_3) as common algebraic base",
-     test_withdraw_gl3_as_common_base),
+    ("B2 GL(3,F_3) common-base claim NOT_ESTABLISHED; embeddings OPEN",
+     test_withdraw_gl3_as_common_base_not_established),
     ("B3 withdraw 'Lo Shu forces sigma=1/2' (analogy != proof)",
      test_withdraw_lo_shu_forces_sigma_half),
-    ("C1 flag v1.0 GL(5,F_3) order-of-magnitude error (4.72e12 vs actual 4.76e11)",
+    ("C1 flag v1.0 GL(5,F_3) order-of-magnitude error",
      test_flag_v1_gl5_order_of_magnitude_error),
 ]
 
