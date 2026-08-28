@@ -38,6 +38,15 @@ STEPS = [
 ]
 
 
+def _annotation_text(text):
+    """Escape multiline subprocess output for GitHub workflow annotations."""
+    return (
+        text.replace("%", "%25")
+        .replace("\r", "%0D")
+        .replace("\n", "%0A")
+    )
+
+
 def run(label, script):
     print(f"\n>>> {label}  ({script})")
     t0 = time.time()
@@ -53,12 +62,13 @@ def run(label, script):
         if r.stderr:
             for line in r.stderr.rstrip().splitlines():
                 print(f"    [stderr] {line}", file=sys.stderr)
-        return r.returncode == 0, dt
+        diagnostic = (r.stderr or r.stdout or f"exit code {r.returncode}")[-2000:]
+        return r.returncode == 0, dt, diagnostic
     except subprocess.TimeoutExpired:
-        return False, time.time() - t0
+        return False, time.time() - t0, "timeout after 300 seconds"
     except Exception as e:
         print(f"    [error] {e}", file=sys.stderr)
-        return False, time.time() - t0
+        return False, time.time() - t0, repr(e)
 
 
 if __name__ == "__main__":
@@ -66,20 +76,27 @@ if __name__ == "__main__":
     print(" verify_all.py — 全層 self-test (v2 layered, 19 checks)")
     print(" (approximation-attractor-systems/AXIOMS.A0/A1 誠實邊界)")
     print("=" * 68)
-    results = [(lbl, *run(lbl, s)) for lbl, s in STEPS]
+
+    results = []
+    for label, script in STEPS:
+        ok, dt, diagnostic = run(label, script)
+        results.append((label, script, ok, dt))
+        if not ok:
+            message = _annotation_text(diagnostic)
+            print(f"::error file={script},title={label} failed::{message}")
 
     print("\n" + "=" * 68)
     print(" SUMMARY")
     print("=" * 68)
-    for lbl, ok, dt in results:
+    for label, script, ok, dt in results:
         mark = "OK" if ok else "FAIL"
-        print(f"  [{mark:4s}] {lbl:52s} {dt:6.2f}s")
-    all_pass = all(ok for _, ok, _ in results)
+        print(f"  [{mark:4s}] {label:52s} {dt:6.2f}s  {script}")
+    all_pass = all(ok for _, _, ok, _ in results)
     print("-" * 68)
     if all_pass:
         print(" ALL PASS — 當前 layer stack 收斂到「是真正的 1」")
         print(" 依 AXIOMS.A0: 不主張終局封閉, 此為當前 session receipt.")
     else:
         print(" SOME FAIL — 有殘差在當前 layer stack.")
-        print(" 依 AXIOMS.A1: 殘差要記錄不藏. 差 \> 抵達 (OMEGA_MAP).")
+        print(" 依 AXIOMS.A1: 殘差要記錄不藏. 差 > 抵達 (OMEGA_MAP).")
     sys.exit(0 if all_pass else 1)
