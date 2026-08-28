@@ -3,10 +3,9 @@ import subprocess
 import sys
 
 STEPS = [
-    ("q1", "q1-combinatorics/unicode5.py"),
-    ("q3", "q3-luoshu/luoshu_check.py"),
-    ("q3c", "q3-luoshu/converge.py"),
-    ("q3d", "q3-luoshu/riemann_kerr_disproof.py"),
+    ("q3e", "q3-luoshu/rh_proof_audit.py"),
+    ("q3f", "q3-luoshu/order_bijection_v1.py"),
+    ("q3g", "q3-luoshu/euler_symplectic_v1.py"),
 ]
 
 failed = []
@@ -21,5 +20,5 @@ for label, script in STEPS:
         failed.append((label, script))
         print(f"::error file={script},title={label} failed::exit {result.returncode}")
 
-print("BISECT_RESULT", failed if failed else "PASS_FIRST_HALF")
+print("BISECT_RESULT", failed if failed else "PASS_SECOND_HALF")
 sys.exit(1 if failed else 0)
