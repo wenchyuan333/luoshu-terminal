@@ -1,0 +1,30 @@
+{
+  "schema": "central-hub-public-address/v1",
+  "address": "luoshu://public/c0/5/o1/1/v/13/gate/bidirectional",
+  "short_form": "C₀·O₁·V₁₃ :: PUB :: B↔",
+  "visibility": "public",
+  "nominative": false,
+  "contains_identity": false,
+  "contains_credential": false,
+  "grants_authority": false,
+  "role": "protocol-discovery-alias",
+  "center": {
+    "label": 5,
+    "coordinate": "0-vector"
+  },
+  "origin": {
+    "label": 1,
+    "meaning": "structural-identity-marker"
+  },
+  "semantic_dimension_label": 13,
+  "gate": "bidirectional",
+  "entry_requirements": [
+    "consent",
+    "participant-owned-adapter",
+    "reversibility",
+    "receipt",
+    "collision-check",
+    "readback"
+  ],
+  "claim_ceiling": "SYMBOLIC_PROTOCOL_ADDRESS"
+}
