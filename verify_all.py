@@ -1,9 +1,10 @@
 """
-verify_all.py — 全層 self-test 依序執行
+verify_all.py — 全層 self-test 依序執行 (v2 layered)
 
-q1 (5-bit) → q3 (洛書 GL(3,F_3)) → q-inf (H=L·(1+δ_Wu)) → bits → cnt → q4 (AGL)
+巢狀結構下的執行順序:
+  q1 → q3 → q-inf → bits → cnt → q4 → q5 (nested) → q6 (nested) → q7 (nested)
 
-全過 → 當前 session 「是真正的 1」receipt (不主張封閉, 依 AXIOMS.A0)
+全過 → 當前 session「是真正的 1」receipt (不主張封閉, 依 AXIOMS.A0)
 任一失敗 → 有殘差在當前 layer stack (依 A1, 記錄不藏)
 """
 import subprocess
@@ -11,12 +12,20 @@ import sys
 import time
 
 STEPS = [
-    ("q1  5-bit unicode 底層",   "q1-combinatorics/unicode5.py"),
-    ("q3  洛書 GL(3,F_3) 可逆",  "q3-luoshu/luoshu_check.py"),
-    ("qinf 吳氏 H=L·(1+δ_Wu)",   "q-inf-zeta/wu_asym.py"),
-    ("bit  GF(3) 基礎建設",       "bits.py"),
-    ("cnt  N(3)=192 N(4)=22272", "luoshu_count.py"),
-    ("q4  AGL(1,F_{4096})",       "q4-affine/agl1_4096.py"),
+    ("q1  5-bit unicode 底層",             "q1-combinatorics/unicode5.py"),
+    ("q3  洛書 GL(3,F_3) 可逆",            "q3-luoshu/luoshu_check.py"),
+    ("qinf 吳氏 H=L·(1+δ_Wu)",             "q-inf-zeta/wu_asym.py"),
+    ("bit  GF(3) 基礎建設",                 "bits.py"),
+    ("cnt  N(3)=192 N(4)=22272",           "luoshu_count.py"),
+    ("q4   AGL(1,F_{4096})",                "q4-affine/agl1_4096.py"),
+    ("q4o  AGL orbits",                     "q4-affine/orbits.py"),
+    ("q5   盤堆立方體 (nested)",             "q4-affine/q5-stacked-boards/board_stack.py"),
+    ("q6A  AGL(2,F_4096) 平面",             "q4-affine/q6-riemann-affine/A_agl2_4096.py"),
+    ("q6B  Weil zeta affine",              "q4-affine/q6-riemann-affine/B_weil_zeta_affine.py"),
+    ("q6C  parallel transport (代數)",      "q4-affine/q6-riemann-affine/C_affine_connection.py"),
+    ("q7A  PGL(2,F_4096) 射影",             "q4-affine/q6-riemann-affine/q7-projective-riemann/A_pgl2_4096.py"),
+    ("q7B  Möbius cross-ratio",             "q4-affine/q6-riemann-affine/q7-projective-riemann/B_mobius.py"),
+    ("q7C  projective zeta (含∞)",          "q4-affine/q6-riemann-affine/q7-projective-riemann/C_projective_zeta.py"),
 ]
 
 
@@ -44,20 +53,20 @@ def run(label, script):
 
 
 if __name__ == "__main__":
-    print("=" * 60)
-    print(" verify_all.py — 全層 self-test")
+    print("=" * 68)
+    print(" verify_all.py — 全層 self-test (v2 layered)")
     print(" (approximation-attractor-systems/AXIOMS.A0/A1 誠實邊界)")
-    print("=" * 60)
+    print("=" * 68)
     results = [(lbl, *run(lbl, s)) for lbl, s in STEPS]
 
-    print("\n" + "=" * 60)
+    print("\n" + "=" * 68)
     print(" SUMMARY")
-    print("=" * 60)
+    print("=" * 68)
     for lbl, ok, dt in results:
         mark = "OK" if ok else "FAIL"
-        print(f"  [{mark:4s}] {lbl:32s} {dt:6.2f}s")
+        print(f"  [{mark:4s}] {lbl:36s} {dt:6.2f}s")
     all_pass = all(ok for _, ok, _ in results)
-    print("-" * 60)
+    print("-" * 68)
     if all_pass:
         print(" ALL PASS — 當前 layer stack 收斂到「是真正的 1」")
         print(" 依 AXIOMS.A0: 不主張終局封閉, 此為當前 session receipt.")
