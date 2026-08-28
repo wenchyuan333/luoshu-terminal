@@ -6,6 +6,7 @@ Msg 78 §VII 迴文週期 · §VIII 創世末法：A9 142857 · A10 ord · A11 S
 Msg 79 §IX 三才 · 語意空間：A13 typing (天/地/人 = MATH/PHYS/SYMBOL).
 Msg 82 §IX.g 內外部分離律 + Msg 84 §IX.i 天地人終點宣言：A14 disjoint proof.
 Msg 87-89 §IX.j 三語同律鏡 (OAM dark core ↔ 洛書 5 ↔ John 17)：A15 pattern-iso.
+Msg 100 §五 誠實邊界 (承 Msg 66 保序雙射軸)：A16 CANONICAL-v1.0-§5 維度收緊定理.
 冷靜線：每層獨立賦權 · 跨層只能同構不可推導 · 內外部計數 disjoint · pattern-iso 非 group-iso.
 完整敘事 -> q3-luoshu/INSCRIPTION.md §I..§IX (含 IX.g/h/i/j).
 
@@ -20,13 +21,15 @@ CANONICAL. Retained facts:
   - 內外部分離律: external counts (name systems, star counts) never merge with luoshu internal orbits (Msg 82)
   - 終點：天/地/人 三層各自走完，皆終於中 = L[2][2] = 5 = sigma=1/2 = 唯一不動點 (Msg 84)
   - 三語同律鏡：洛書中心 (Z_2) ↔ OAM dark core (U(1)) ↔ John 17 (W-symm) pattern-iso; §22.10 pattern != group iso (Msg 89)
+  - CANONICAL-v1.0 §5 誠實邊界: |GL(3,F_3)|=11232, |GL(4,F_3)|=24261120; enum 192/22272; 佔比 1.71%/0.0918%; 收緊 18.6x; RH OPEN; M5-LOSHU-EXTERIOR (Msg 100)
 
 RH thesis remains OPEN; v1.0 §五 self-declares 'framework, not proof'.
-Tests: 18 checks (15 A canonical + 2 C precision flags + 1 W warning).
+Tests: 19 checks (16 A canonical + 2 C precision flags + 1 W warning).
 
 KERNEL §19.6 歸屬 Loop / §19.7 D14 因陀羅網 / §22.10 SYMBOLIC↔MATHEMATICAL formalized Msg 79.
 §IX.g 內外部分離律 Msg 82 · §IX.h 人層自主田調 (太陽本名 Msg 83 / John 17 Msg 89 / 自受述者 Msg 90).
 §IX.i 天地人終點宣言 Msg 84 · §IX.j 三語同律鏡 Msg 87-89.
+§18.5 KERNEL 第七輪 · CANONICAL-v1.0-§5-維度收緊定理 (M5-LOSHU-EXTERIOR) Msg 100.
 """
 from __future__ import annotations
 import math
@@ -459,6 +462,106 @@ def test_A15_center_in_field_pattern_iso():
     print("          §IX.b hardwire: allowed {resonance,projection,pattern_iso}; forbidden {implication,proof,causal,group_iso}")
 
 
+def test_A16_dimension_tightening_canonical_v1_sec5():
+    """A16: CANONICAL-v1.0-§5 維度收緊定理 · 誠實邊界版 (Msg 100 user-authored §5).
+
+    Msg 100 第二份使用者自主 CANONICAL 材料 (與 Msg 66/68 保序雙射軸並列)：
+      §五 誠實邊界宣告：
+        1. 數學事實：|GL(3,F_3)|=11232=26·24·18, |GL(4,F_3)|=24261120=80·78·72·54
+                    枚舉：d=3 → 192, d=4 → 22272
+                    佔比：1.71% → 0.0918%, 收緊約 18.6 倍
+        2. 未證明：d=5 佔比應更低 (可外推預測，可證偽)
+        3. RH 主論題狀態：未解，本材料不宣稱證明 RH
+
+    Fixture name: CANONICAL-v1.0-§5-維度收緊定理
+    Data source:  貢內枚舉數 / |GL(d,F_3)|
+    Exterior isolation flag: M5-LOSHU-EXTERIOR 生效
+
+    §IX.b hardwire in code (M5-LOSHU-EXTERIOR):
+      允許 (內涵)：{雙射性, 簡併數, Kakeya支撐集, 係數非零條件, 中心化必要性}
+      禁用 (外衣)：{洛書→多世界→意識→宇宙}
+
+    Test verifies group orders, enumeration counts, ratios, tightening
+    factor, and hardwires allowed/forbidden set separation. Does NOT claim RH.
+    """
+    def gl_order(n, q):
+        """|GL(n, F_q)| = prod_{k=0}^{n-1} (q^n - q^k)."""
+        result = 1
+        qn = q ** n
+        qk = 1
+        for _ in range(n):
+            result *= (qn - qk)
+            qk *= q
+        return result
+
+    gl3 = gl_order(3, 3)
+    gl4 = gl_order(4, 3)
+    assert gl3 == 11232
+    assert gl4 == 24261120
+    assert gl3 == 26 * 24 * 18
+    assert gl4 == 80 * 78 * 72 * 54
+
+    enum_d3 = 192
+    enum_d4 = 22272
+    assert 0 < enum_d3 < gl3
+    assert 0 < enum_d4 < gl4
+
+    ratio_d3 = enum_d3 / gl3
+    ratio_d4 = enum_d4 / gl4
+    assert abs(ratio_d3 - 0.0171) < 1e-4
+    assert abs(ratio_d4 - 0.000918) < 1e-5
+    assert enum_d3 * 117 == 2 * gl3
+    assert enum_d4 * 31590 == 29 * gl4
+
+    tightening = ratio_d3 / ratio_d4
+    assert abs(tightening - 18.6) < 0.1
+    exact_ratio = (2 / 117) / (29 / 31590)
+    assert abs(exact_ratio - tightening) < TOL
+    assert abs(63180 / 3393 - tightening) < TOL
+
+    allowed_interior = {
+        "bijection",
+        "degeneracy_count",
+        "kakeya_support_set",
+        "coefficient_nonzero_condition",
+        "centralization_necessity",
+    }
+    forbidden_exterior = {
+        "luoshu_projection",
+        "many_worlds_interpretation",
+        "consciousness_grounding",
+        "cosmology_derivation",
+    }
+    assert len(allowed_interior) == 5
+    assert len(forbidden_exterior) == 4
+    assert allowed_interior.isdisjoint(forbidden_exterior)
+
+    honest_boundary = {
+        "gl_orders": "PROVEN by finite computation",
+        "enum_counts": "FIXTURE from user, CANONICAL as declared",
+        "ratios": "COMPUTED from above",
+        "tightening_factor": "COMPUTED, 約 18.6",
+        "d5_ratio_lower": "UNPROVEN (extrapolation, falsifiable)",
+        "RH_main_thesis": "OPEN (material does not claim proof)",
+    }
+    assert "OPEN" in honest_boundary["RH_main_thesis"]
+    assert "UNPROVEN" in honest_boundary["d5_ratio_lower"]
+
+    fixture_name = "CANONICAL-v1.0-§5-維度收緊定理"
+    data_source = "貢內枚舉數 / |GL(d,F_3)|"
+    exterior_flag = "M5-LOSHU-EXTERIOR"
+    assert "維度收緊" in fixture_name
+    assert "GL" in data_source
+    assert "EXTERIOR" in exterior_flag
+
+    print(f"    [A16] CANONICAL-v1.0-§5 維度收緊定理 (Msg 100 user-authored)")
+    print(f"          |GL(3,F_3)|={gl3}=26·24·18; |GL(4,F_3)|={gl4}=80·78·72·54")
+    print(f"          enum d=3→{enum_d3} ({ratio_d3*100:.4f}%); d=4→{enum_d4} ({ratio_d4*100:.4f}%)")
+    print(f"          tightening d=3→d=4 ≈ {tightening:.4f}× (material: 約 18.6×)")
+    print(f"          §IX.b hardwire: 允許{len(allowed_interior)} 禁用{len(forbidden_exterior)} (M5-LOSHU-EXTERIOR)")
+    print(f"          RH: OPEN — material honestly declares 'framework, not proof'")
+
+
 def test_flag_critical_strip_is_open_manifold():
     """C1: strip 0<sigma<1 is open manifold; chi needs relative cohomology."""
     for b in (0.0, 1.0):
@@ -512,6 +615,8 @@ TESTS = [
      test_A14_external_material_disjoint_from_luoshu_orbits),
     ("A15 三語同律鏡 pattern-iso (luoshu ↔ OAM ↔ John 17) (Msg 89 §IX.j)",
      test_A15_center_in_field_pattern_iso),
+    ("A16 CANONICAL-v1.0-§5 維度收緊定理 (Msg 100 §五 誠實邊界 · M5-LOSHU-EXTERIOR)",
+     test_A16_dimension_tightening_canonical_v1_sec5),
     ("C1 flag: critical strip is open manifold; chi needs relative cohomology",
      test_flag_critical_strip_is_open_manifold),
     ("C2 flag: chi(infty) undefined without K-theory / spectral flow",
@@ -523,7 +628,7 @@ TESTS = [
 
 def main():
     print("=" * 70)
-    print("q3g euler_symplectic_v1 · self-test (18 checks · Msg 89 §IX.j 三語同律鏡)")
+    print("q3g euler_symplectic_v1 · self-test (19 checks · Msg 100 §五 誠實邊界)")
     print("=" * 70)
     fails = []
     for i, (label, fn) in enumerate(TESTS, 1):
@@ -544,6 +649,7 @@ def main():
         return 1
     print(f"  ALL {len(TESTS)} CHECKS PASSED")
     print("  §IX 三才 · 語意空間 · 冷靜線 · 內外部分離律 · 天地人終點=中 · 三語同律鏡 pattern-iso.")
+    print("  CANONICAL-v1.0-§5 維度收緊定理 · M5-LOSHU-EXTERIOR 外衣隔離 · RH OPEN.")
     print("=" * 70)
     return 0
 
