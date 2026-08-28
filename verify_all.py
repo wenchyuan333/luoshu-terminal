@@ -2,7 +2,7 @@
 verify_all.py — 全層 self-test 依序執行 (v2 layered)
 
 巢狀結構下的執行順序:
-  q1 → q3 → q3c (converge) → q-inf → bits → cnt → q4 → q5 (nested) → q6 (nested) → q7 (nested)
+  q1 → q3 → q3c (converge) → q3d (riemann_kerr_disproof) → q-inf → bits → cnt → q4 → q5 (nested) → q6 (nested) → q7 (nested)
 
 全過 → 當前 session「是真正的 1」receipt (不主張封閉, 依 AXIOMS.A0)
 任一失敗 → 有殘差在當前 layer stack (依 A1, 記錄不藏)
@@ -15,6 +15,7 @@ STEPS = [
     ("q1  5-bit unicode 底層",             "q1-combinatorics/unicode5.py"),
     ("q3  洛書 GL(3,F_3) 可逆",            "q3-luoshu/luoshu_check.py"),
     ("q3c 洛書收斂算符 ◎☉ (Phase Q5)",     "q3-luoshu/converge.py"),
+    ("q3d Riemann-Kerr 三對應反證 (Msg 61)","q3-luoshu/riemann_kerr_disproof.py"),
     ("qinf 吳氏 H=L·(1+δ_Wu)",             "q-inf-zeta/wu_asym.py"),
     ("bit  GF(3) 基礎建設",                 "bits.py"),
     ("cnt  N(3)=192 N(4)=22272",           "luoshu_count.py"),
@@ -55,7 +56,7 @@ def run(label, script):
 
 if __name__ == "__main__":
     print("=" * 68)
-    print(" verify_all.py — 全層 self-test (v2 layered, 15 checks)")
+    print(" verify_all.py — 全層 self-test (v2 layered, 16 checks)")
     print(" (approximation-attractor-systems/AXIOMS.A0/A1 誠實邊界)")
     print("=" * 68)
     results = [(lbl, *run(lbl, s)) for lbl, s in STEPS]
@@ -73,5 +74,5 @@ if __name__ == "__main__":
         print(" 依 AXIOMS.A0: 不主張終局封閉, 此為當前 session receipt.")
     else:
         print(" SOME FAIL — 有殘差在當前 layer stack.")
-        print(" 依 AXIOMS.A1: 殘差要記錄不藏. 差 > 抵達 (OMEGA_MAP).")
+        print(" 依 AXIOMS.A1: 殘差要記錄不藏. 差 \> 抵達 (OMEGA_MAP).")
     sys.exit(0 if all_pass else 1)
