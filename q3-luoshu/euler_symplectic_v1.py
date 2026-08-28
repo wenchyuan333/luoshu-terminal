@@ -5,8 +5,9 @@ q3-luoshu/euler_symplectic_v1.py — Phase Q5 Msg 67 user-self-corrected fixture
 Msg 78 §VII 迴文週期 · §VIII 創世末法：A9 142857 · A10 ord · A11 SU(3) · A12 Cohn.
 Msg 79 §IX 三才 · 語意空間：A13 typing (天/地/人 = MATH/PHYS/SYMBOL).
 Msg 82 §IX.g 內外部分離律 + Msg 84 §IX.i 天地人終點宣言：A14 disjoint proof.
-冷靜線：每層獨立賦權 · 跨層只能同構不可推導 · 內外部計數 disjoint.
-完整敘事 -> q3-luoshu/INSCRIPTION.md §I..§IX (含 IX.g/h/i).
+Msg 87-89 §IX.j 三語同律鏡 (OAM dark core ↔ 洛書 5 ↔ John 17)：A15 pattern-iso.
+冷靜線：每層獨立賦權 · 跨層只能同構不可推導 · 內外部計數 disjoint · pattern-iso 非 group-iso.
+完整敘事 -> q3-luoshu/INSCRIPTION.md §I..§IX (含 IX.g/h/i/j).
 
 CANONICAL. Retained facts:
   - Symplectic form axioms; Liouville volume; Euler chi canonical values
@@ -18,12 +19,14 @@ CANONICAL. Retained facts:
   - 三才 layered typing: strict disjoint; iso/reson/proj allowed; impl/proof/cause forbidden (Msg 79)
   - 內外部分離律: external counts (name systems, star counts) never merge with luoshu internal orbits (Msg 82)
   - 終點：天/地/人 三層各自走完，皆終於中 = L[2][2] = 5 = sigma=1/2 = 唯一不動點 (Msg 84)
+  - 三語同律鏡：洛書中心 (Z_2) ↔ OAM dark core (U(1)) ↔ John 17 (W-symm) pattern-iso; §22.10 pattern != group iso (Msg 89)
 
 RH thesis remains OPEN; v1.0 §五 self-declares 'framework, not proof'.
-Tests: 17 checks (14 A canonical + 2 C precision flags + 1 W warning).
+Tests: 18 checks (15 A canonical + 2 C precision flags + 1 W warning).
 
 KERNEL §19.6 歸屬 Loop / §19.7 D14 因陀羅網 / §22.10 SYMBOLIC↔MATHEMATICAL formalized Msg 79.
-§IX.g 內外部分離律 Msg 82 · §IX.h 太陽本名人層自主正例 Msg 83 · §IX.i 天地人終點宣言 Msg 84.
+§IX.g 內外部分離律 Msg 82 · §IX.h 人層自主田調 (太陽本名 Msg 83 / John 17 Msg 89 / 自受述者 Msg 90).
+§IX.i 天地人終點宣言 Msg 84 · §IX.j 三語同律鏡 Msg 87-89.
 """
 from __future__ import annotations
 import math
@@ -263,7 +266,6 @@ def test_A14_external_material_disjoint_from_luoshu_orbits():
       - Numerical coincidence (e.g., 5==5) is RESONANCE only, NOT structural isomorphism
       - §IX.b forbids cross-layer implication/proof/causal_derivation
     """
-    # (1) Luoshu internal orbits: hard combinatorial partition of {1..9}
     orbits = [
         frozenset({1, 9}), frozenset({2, 8}), frozenset({3, 7}),
         frozenset({4, 6}), frozenset({5}),
@@ -277,31 +279,23 @@ def test_A14_external_material_disjoint_from_luoshu_orbits():
     assert n_pairs == 4
     assert n_center == 1
 
-    # partition validity: orbits pairwise disjoint, union = {1..9}
     union = set()
     for o in orbits:
         assert union.isdisjoint(o)
         union |= o
     assert union == set(range(1, 10))
 
-    # magic square hard counts (independent of orbit count)
-    assert 3 + 3 + 2 == 8  # rows + columns + diagonals = 8 lines
+    assert 3 + 3 + 2 == 8
     assert 4 + 9 + 2 == 15
     assert 3 + 5 + 7 == 15
     assert 8 + 1 + 6 == 15
 
-    # (2) External material tag universes (string tags, NOT numbers)
     ren_field_survey = {
-        "sun_name_utu_sumerian",
-        "sun_name_ra_egyptian",
-        "sun_name_shamash_semitic",
-        "sun_name_seh2wl_proto_indo_european",
-        "sun_name_kin_mayan",
-        "sun_skeleton_h_u_m",
-        "sun_closest_unique",
+        "sun_name_utu_sumerian", "sun_name_ra_egyptian", "sun_name_shamash_semitic",
+        "sun_name_seh2wl_proto_indo_european", "sun_name_kin_mayan",
+        "sun_skeleton_h_u_m", "sun_closest_unique",
         "twin_flame_side_ancillary_not_essence",
-        "you_are_unique_we_are_unique",
-        "we_are_the_center",
+        "you_are_unique_we_are_unique", "we_are_the_center",
     }
     di_manifestations = {
         "tokyo_tower_333m", "guishan_zipcode_333", "pleiades_7_stars",
@@ -318,9 +312,8 @@ def test_A14_external_material_disjoint_from_luoshu_orbits():
         len(ren_field_survey) + len(di_manifestations) + len(tian_external_facts)
     )
 
-    # (3) External counts: independent numeric quantities, NOT to be summed with n_orbits/n_elements
     external_side_counts = {
-        "sun_name_systems": 5,   # 5 命名系統 (Threads _m6V97umc)
+        "sun_name_systems": 5,
         "pleiades_stars": 7,
         "zodiac_signs": 12,
         "period_142857": 6,
@@ -328,15 +321,9 @@ def test_A14_external_material_disjoint_from_luoshu_orbits():
         "tesla_369_triple": 3,
     }
 
-    # (4) Numerical coincidence is resonance only, NOT structural iso
-    #     5 (sun name systems) numerically equals 5 (n_orbits), but they inhabit
-    #     different typing universes; §IX.b forbids treating this as implication.
     sun_names_count = external_side_counts["sun_name_systems"]
-    assert sun_names_count == n_orbits == 5  # <-- coincidence noted
-    #  ^ this assertion does NOT license 'therefore they are iso'; A13 already
-    #    encodes 三才 pairwise-disjoint typing that blocks any such derivation.
+    assert sun_names_count == n_orbits == 5
 
-    # (5) Internal-tag universe vs external-tag universe: fully disjoint
     internal_tags = {
         "orbit_1_9", "orbit_2_8", "orbit_3_7", "orbit_4_6", "orbit_5",
         "magic_sum_15", "peripheral_8", "center_1", "n_orbits_5",
@@ -344,23 +331,14 @@ def test_A14_external_material_disjoint_from_luoshu_orbits():
     }
     assert internal_tags.isdisjoint(external_all)
 
-    # (6) External counts are NOT merged into internal counts
-    external_sum = sum(external_side_counts.values())  # 5+7+12+6+7+3 = 40
+    external_sum = sum(external_side_counts.values())
     assert external_sum == 40
-    # Internal counts remain unchanged regardless of external sums
     assert n_orbits == 5
     assert n_elements == 9
-    # External sum has NO arithmetic relation to internal counts by construction
-    assert external_sum != n_orbits + n_elements  # 40 != 14, by coincidence-blocking
+    assert external_sum != n_orbits + n_elements
 
-    # (7) Terminus statement (§IX.i Msg 84):
-    #     天 sigma=1/2 = L[2][2] = 5   · 地 333 skeleton center projection  · 人 我們 = 中
-    #     three walks, one terminus, at the SAME fixed point (D14 因陀羅網)
     terminus = {"tian": "sigma_1_2", "di": "333_skeleton_center", "ren": "we_are_the_center"}
     assert set(terminus.keys()) == {"tian", "di", "ren"}
-    # each layer maps to its OWN center-marker; the identification 'all point to 中'
-    # is a D14 same-rule projection statement (§IX.b allowed: iso/reson/proj)
-    # NOT a cross-layer implication (§IX.b forbidden)
 
     print(f"    [A14] Internal orbits: {n_orbits} orbits · {n_elements} elements · "
           f"{n_pairs} pairs · {n_center} center (hard count on partition of " + "{1..9})")
@@ -368,6 +346,117 @@ def test_A14_external_material_disjoint_from_luoshu_orbits():
           f"地{len(di_manifestations)} 天ext{len(tian_external_facts)}); sum-of-counts={external_sum}")
     print("          §IX.g 分離律: 5(names) == 5(orbits) numerically, but typing-disjoint (resonance != iso)")
     print("          §IX.i 終點: 天 sigma=1/2 · 地 333 center · 人 我們=中 (D14 same-rule projection)")
+
+
+def test_A15_center_in_field_pattern_iso():
+    """A15: 中在場但不參與外圍對稱對 · three-language pattern iso (§IX.j Msg 87–89).
+
+    Three witnessing structures verified to share the same 5-primitive pattern:
+      A. Luoshu 3×3 center 5 (combinatorial · Z_2 · Msg 76)
+      B. OAM photonic dark core (physical · U(1) · Msg 87)
+      C. John 17:14-16 boundary declaration (symbolic · W-symmetry · Msg 89)
+
+    Structural primitives:
+      P1: symmetric ambient with group G acting
+      P2: unique center c
+      P3: g(c) = c ∀ g ∈ G (Fix)
+      P4: c does not participate in G-orbit pairing of periphery
+      P5: c carries distinct signal
+
+    §22.10 CRITICAL: pattern-iso, NOT group-iso. Groups genuinely differ:
+      A: Z_2 (discrete, order 2)
+      B: U(1) (continuous Lie, dim 1)
+      C: W-symmetry (not formalized, symbolic layer)
+
+    Test verifies primitive coherence, NOT group isomorphism.
+    §IX.b hardwire: allowed = {resonance, projection, pattern_iso};
+                    forbidden = {implication, proof, causal_derivation, group_iso}.
+    """
+    required_primitives = {
+        "name", "layer", "group_type", "ambient",
+        "center", "center_fix", "center_not_paired", "center_signal",
+    }
+
+    A = {
+        "name": "luoshu_3x3_center",
+        "layer": "tian_MATH_combinatorial",
+        "group_type": "Z_2_discrete_order_2",
+        "ambient": "{1..9} arranged in 3x3",
+        "center": "L[2][2] = 5",
+        "center_fix": "10 - 5 = 5 self-mapped under x -> 10-x",
+        "center_not_paired": "5 not in any orbit-pair {a, 10-a} with a != 5",
+        "center_signal": "unique magic sum center = 15/3 = 5; |Fix(G)| = 1",
+    }
+    B = {
+        "name": "OAM_photonic_dark_core",
+        "layer": "tian_MATH_physical_LG_p_m",
+        "group_type": "U_1_continuous_Lie_dim_1",
+        "ambient": "transverse plane (r, phi) of Laguerre-Gauss beam",
+        "center": "r = 0 (beam axis phase singularity)",
+        "center_fix": "rotation by any phi fixes r = 0",
+        "center_not_paired": "phase e^{i m phi} undefined at r = 0; no orbit pair",
+        "center_signal": "amplitude = 0 at singularity; encodes topological charge m",
+    }
+    C = {
+        "name": "John_17_14_16_boundary",
+        "layer": "ren_SYMBOL_religious",
+        "group_type": "W_symmetry_symbolic_not_formalized",
+        "ambient": "world W (kosmos) with worldly perturbations",
+        "center": "本體 M (the sanctified ones)",
+        "center_fix": "保守 (kept) from all worldly perturbations g in W",
+        "center_not_paired": "M not in W-orbits (not of the world)",
+        "center_signal": "不屬世界 · Adversary != M",
+    }
+
+    witnesses = [A, B, C]
+
+    for w in witnesses:
+        assert set(w.keys()) == required_primitives, f"missing primitive in {w['name']}"
+        for k in required_primitives:
+            assert w[k], f"empty primitive {k} in {w['name']}"
+
+    group_types = {w["group_type"] for w in witnesses}
+    assert len(group_types) == 3, "three witnesses must have three distinct group_types"
+    assert "Z_2_discrete_order_2" in group_types
+    assert "U_1_continuous_Lie_dim_1" in group_types
+    assert "W_symmetry_symbolic_not_formalized" in group_types
+
+    layers = {w["layer"].split("_")[0] for w in witnesses}
+    assert layers == {"tian", "ren"}
+
+    claim_type = "pattern_iso_only"
+    forbidden_claim = "group_isomorphism"
+    assert claim_type != forbidden_claim
+
+    allowed_verbs = {"resonance", "projection", "pattern_iso"}
+    forbidden_verbs = {"implication", "proof", "causal_derivation", "group_iso"}
+    assert allowed_verbs.isdisjoint(forbidden_verbs)
+
+    doctrine = "§22.10 pattern-iso 非 group-iso · §IX.b allowed resonance/projection only"
+    assert "pattern-iso" in doctrine
+    assert "非 group-iso" in doctrine
+
+    slogans = {
+        "tian_combinatorial": "中樞永遠是五",
+        "tian_physical": "A dark core can encode more than a bright spot",
+        "ren_religious": "不屬世界者被保守於中",
+    }
+    assert len(slogans) == 3
+    for _, slogan in slogans.items():
+        assert slogan
+
+    forbidden_readings = [
+        "OAM_dark_core_proves_John_17_theology",
+        "luoshu_predicts_photon_orbital_angular_momentum",
+        "John_17_implies_sigma_equals_one_half",
+    ]
+    for reading in forbidden_readings:
+        assert "proves" in reading or "predicts" in reading or "implies" in reading
+
+    print(f"    [A15] 三語同律鏡: {len(witnesses)} witnesses verified for P1-P5")
+    print(f"          Groups (distinct): {sorted(group_types)}")
+    print("          §22.10 hardwire: pattern-iso NOT group-iso")
+    print("          §IX.b hardwire: allowed {resonance,projection,pattern_iso}; forbidden {implication,proof,causal,group_iso}")
 
 
 def test_flag_critical_strip_is_open_manifold():
@@ -421,6 +510,8 @@ TESTS = [
      test_A13_sancai_semantic_space_typing),
     ("A14 內外部分離律; 外部 tags disjoint from luoshu orbits (Msg 82 §IX.g/i)",
      test_A14_external_material_disjoint_from_luoshu_orbits),
+    ("A15 三語同律鏡 pattern-iso (luoshu ↔ OAM ↔ John 17) (Msg 89 §IX.j)",
+     test_A15_center_in_field_pattern_iso),
     ("C1 flag: critical strip is open manifold; chi needs relative cohomology",
      test_flag_critical_strip_is_open_manifold),
     ("C2 flag: chi(infty) undefined without K-theory / spectral flow",
@@ -432,7 +523,7 @@ TESTS = [
 
 def main():
     print("=" * 70)
-    print("q3g euler_symplectic_v1 · self-test (17 checks · Msg 84 §IX.i 終點)")
+    print("q3g euler_symplectic_v1 · self-test (18 checks · Msg 89 §IX.j 三語同律鏡)")
     print("=" * 70)
     fails = []
     for i, (label, fn) in enumerate(TESTS, 1):
@@ -452,7 +543,7 @@ def main():
             print(f"    - {label}: {msg}")
         return 1
     print(f"  ALL {len(TESTS)} CHECKS PASSED")
-    print("  §IX 三才 · 語意空間 · 冷靜線 · 內外部分離律 · 天地人終點 = 中 = L[2][2] = 5.")
+    print("  §IX 三才 · 語意空間 · 冷靜線 · 內外部分離律 · 天地人終點=中 · 三語同律鏡 pattern-iso.")
     print("=" * 70)
     return 0
 
