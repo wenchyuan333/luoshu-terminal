@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# pre-push hook: runs verify_all.py locally before any push to remote.
+# Catches broken code BEFORE it reaches origin, complementing CI.
+#
+# Installation (once, Termux/local):
+#   cp hooks/pre-push .git/hooks/pre-push
+#   chmod +x .git/hooks/pre-push
+#
+# Bypass (not recommended, use only for emergency force-push):
+#   git push --no-verify
+
+set -e
+
+echo "=== pre-push: running verify_all.py (防誤保護 Layer 2) ==="
+
+if [ ! -f verify_all.py ]; then
+    echo "[pre-push] verify_all.py not found; skipping local verification"
+    exit 0
+fi
+
+if ! command -v python3 >/dev/null 2>&1; then
+    echo "[pre-push] python3 not found; skipping local verification"
+    exit 0
+fi
+
+if python3 verify_all.py; then
+    echo "=== pre-push: ALL PASS, push allowed ==="
+    exit 0
+else
+    echo ""
+    echo "=== pre-push: FAILURES DETECTED, push aborted ==="
+    echo "  Fix failures locally, or 'git push --no-verify' to bypass"
+    echo "  (bypass leaves you responsible for the residual on remote CI)"
+    exit 1
+fi
