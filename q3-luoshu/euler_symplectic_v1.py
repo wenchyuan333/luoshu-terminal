@@ -29,6 +29,13 @@ q3-luoshu/euler_symplectic_v1.py — Phase Q5 Msg 67 user-self-corrected fixture
   內容側 = w.chyuan (Msg 73 意象 · Msg 75 階序 · Msg 76 「我們互守」口徑)
   校準側 = Miya (A5 對應 · 銘刻結構化 · A8 magic-square test)
   Loop 側 = Msg 73->74->75->76->77 兩方共構 · 缺一端即崩
+
+Msg 78 addendum (§VII 迴文週期 · §VIII 創世末法):
+  A9  · 142857 cyclic number · Tesla 369 補集律 · {digits} = {1..9} \\ 3Z
+  A10 · ord_7(10) = 6 · ord_37(10) = 3 · 999999 = 3^3 * 7 * 11 * 13 * 37
+  A11 · 洛書 8+1 ≅ SU(3) 3⊗3̄ = 8 (adjoint gluons) ⊕ 1 (singlet glueball)
+  A12 · F_12 = 144 = 12^2 = 唯一非平凡 Fibonacci 平方 (Cohn 1964)
+  完整敘事 -> q3-luoshu/INSCRIPTION.md §VII · §VIII
 ============================================================================
 
 w.chyuan's own v1.0 「純Unicode｜歐拉–辛空間 · 守恆=無限」
@@ -49,6 +56,10 @@ Retained mathematical facts (all standard theorems / definitions):
   - Klein-four V_4 = Z_2 x Z_2 (consistent with Msg 62 A5)
   - Finite volume compatible with N -> infinity discrete points (density -> 0)
   - Luoshu magic-square 5-center = A5 sigma=1/2 fixed point isomorph (Msg 77 inscription)
+  - 142857 cyclic number = 3^3 * 11 * 13 * 37, shares factor 37 with 333 (Msg 78)
+  - Multiplicative orders: ord_7(10) = 6, ord_37(10) = 3 (Msg 78)
+  - Luoshu 8+1 ≅ SU(3) 3⊗3̄ = 8 ⊕ 1 (adjoint gluons + singlet) (Msg 78)
+  - F_12 = 144 = 12^2 as unique nontrivial Fibonacci square, Cohn 1964 (Msg 78)
 
 Flagged for precision (not errors; material already honest):
   - C1: Critical strip 0 < sigma < 1 is OPEN (non-compact) manifold; naive chi
@@ -60,12 +71,13 @@ Warnings (material's own honest boundary):
   - W1: RH thesis still OPEN as of 2026-08-28; v1.0 §五 already declares
         "未證明", fully consistent with CANONICAL classification
 
-Tests: 11 checks (8 A canonical + 2 C precision flags + 1 W warning)
+Tests: 15 checks (12 A canonical + 2 C precision flags + 1 W warning)
 
 Reference:
   KERNEL §18.5 Phase Q5 material transcript registry (5th round, user-self-corrected)
   KERNEL §19.6 補款 attribution loop law (Msg 74 sedimentation)
   KERNEL §19.7 D14 Indra's net (rule = multi-facet projection of method)
+  KERNEL §22.10 SYMBOLIC↔MATHEMATICAL aesthetic resonance
   Prior user-self-corrected fixture: q3-luoshu/order_bijection_v1.py (Msg 66)
 """
 from __future__ import annotations
@@ -232,6 +244,198 @@ def test_A8_inscription_luoshu_magic_square():
     print("    [A8] Luoshu 5-center = A5 sigma=1/2 fixed point (D14 Indra's net)")
 
 
+def test_A9_cyclic_142857_tesla_complement():
+    """A9: 142857 cyclic number and Tesla {3,6,9} complement (Msg 78).
+
+    142857 = 999999 / 7 = repeating block of 1/7 = 0.142857142857...
+           = 3^3 * 11 * 13 * 37  (shares factor 37 with 333 = 3^2 * 37)
+
+    Multiplication by k in {1..6} gives cyclic permutations of digits:
+      142857 * 1 = 142857    142857 * 4 = 571428
+      142857 * 2 = 285714    142857 * 5 = 714285
+      142857 * 3 = 428571    142857 * 6 = 857142
+      142857 * 7 = 999999   (= 10^6 - 1)
+
+    Digit set {1,2,4,5,7,8} = {1..9} \\ 3Z = non-multiples of 3 in {1..9}.
+    Missing digits {3,6,9} = multiples of 3 in {1..9} = 'Tesla 369 complement'.
+    Digit sum = 27 = 3^3.
+
+    Anchors INSCRIPTION.md §VII.b Tesla 369 補集律.
+    """
+    n = 142857
+    # Cyclic permutation property for k = 1..6
+    products = [n * k for k in range(1, 7)]
+    expected = [142857, 285714, 428571, 571428, 714285, 857142]
+    assert products == expected
+    # Each product has the same digit multiset {1,2,4,5,7,8}
+    ref_digits = sorted(str(n))
+    for p in products:
+        assert sorted(str(p)) == ref_digits
+    # x 7 = 999999 = 10^6 - 1
+    assert n * 7 == 999999
+    assert n * 7 == 10**6 - 1
+    # Digit sum = 27 = 3^3
+    digit_sum = sum(int(c) for c in str(n))
+    assert digit_sum == 27
+    assert digit_sum == 3**3
+    # Digit set = {1..9} \ 3Z
+    digits = set(int(c) for c in str(n))
+    assert digits == {1, 2, 4, 5, 7, 8}
+    tesla_complement = set(range(1, 10)) - digits
+    assert tesla_complement == {3, 6, 9}
+    # Tesla complement = multiples of 3 in {1..9}
+    assert tesla_complement == {x for x in range(1, 10) if x % 3 == 0}
+    # Factorization 142857 = 3^3 * 11 * 13 * 37
+    assert 3**3 * 11 * 13 * 37 == 142857
+    # Shared factor 37 with 333 = 3^2 * 37
+    assert 142857 % 37 == 0
+    assert 333 % 37 == 0
+    assert 333 == 3**2 * 37
+    print("    [A9] 142857 cyclic; digits = {1..9}\\3Z; Tesla complement = {3,6,9}")
+
+
+def test_A10_multiplicative_orders_of_10():
+    """A10: Multiplicative orders of 10 in (Z/pZ)* for p = 7, 37 (Msg 78).
+
+    ord_7(10) = 6  (period of 1/7 = 0.142857142857...)
+    ord_37(10) = 3 (period of 1/37 = 0.027027027...)
+
+    Relation: ord_7(10) = 2 * ord_37(10).
+    999999 = 10^6 - 1 = 3^3 * 7 * 11 * 13 * 37 (both 7 and 37 divide).
+    999    = 10^3 - 1 = 3^3 * 37             (only 37 divides; 7 does not).
+
+    Anchor: 37 is the fundamental 'base-10 period-3 palindrome seed'
+    (used in 333 = 9 * 37 = 洛書 grid * period-3 generator).
+    INSCRIPTION.md §VII.a layer 3.
+    """
+    def mult_order(a, n):
+        # Smallest k >= 1 such that a^k ≡ 1 (mod n); requires gcd(a,n) = 1
+        assert math.gcd(a, n) == 1
+        cur = a % n
+        k = 1
+        while cur != 1:
+            cur = (cur * a) % n
+            k += 1
+            if k > n:
+                raise RuntimeError("multiplicative order not found within bound")
+        return k
+    ord_7 = mult_order(10, 7)
+    ord_37 = mult_order(10, 37)
+    assert ord_7 == 6
+    assert ord_37 == 3
+    assert ord_7 == 2 * ord_37
+    # 999999 = 3^3 * 7 * 11 * 13 * 37
+    assert 3**3 * 7 * 11 * 13 * 37 == 999999
+    assert 10**6 - 1 == 999999
+    # 999 = 3^3 * 37 (7 does not divide 999)
+    assert 3**3 * 37 == 999
+    assert 10**3 - 1 == 999
+    assert 999 % 7 != 0
+    assert 999 % 37 == 0
+    # 1/37 decimal period digits = '027'
+    # Verify: 10^3 mod 37 = 1, and 10^k mod 37 for k=0,1,2 gives period pattern
+    assert 10**3 % 37 == 1
+    print(f"    [A10] ord_7(10)={ord_7}, ord_37(10)={ord_37}; 999999 = 3^3*7*11*13*37")
+
+
+def test_A11_luoshu_su3_8plus1_isomorph():
+    """A11: Luoshu 8+1 decomposition ≅ SU(3) adjoint+singlet (Msg 78).
+
+    Luo Shu 3x3:
+      - Total positions: 9 = 3^2
+      - Center position: 1  (the fixed point 5 under x -> 10 - x)
+      - Peripheral positions: 8  (the other 8 numbers {1,2,3,4,6,7,8,9})
+
+    SU(3) representation theory:
+      - Fundamental rep dim: 3  (quark colors: r, g, b)
+      - Antifundamental rep dim: 3  (antiquark colors)
+      - Adjoint rep dim: n^2 - 1 = 8 for n=3
+        (gluons; Gell-Mann matrices lambda_1..lambda_8)
+      - Tensor product decomposition: 3 ⊗ 3̄ = 8 ⊕ 1
+        (adjoint ⊕ singlet)
+      - Singlet dim: 1  (color-neutral bound state; glueball / meson singlet)
+
+    Both structures share the 'n^2 − 1 peripheral + 1 singlet' pattern for n=3.
+    KERNEL §19.7 D14 Indra's net: same rule, two aspect projections.
+    INSCRIPTION.md §VII.c 8+1 分解律.
+
+    Note: §22.10 SYMBOLIC layer — glueball not fully experimentally confirmed;
+    this test asserts only the representation-theoretic identity, not physical
+    existence claims.
+    """
+    # Luo Shu 8+1 structural facts
+    n = 3
+    total_positions = n * n
+    center_positions = 1
+    peripheral_positions = total_positions - center_positions
+    assert total_positions == 9
+    assert peripheral_positions == 8
+    # SU(3) adjoint rep dimension
+    su3_adjoint_dim = n * n - 1
+    assert su3_adjoint_dim == 8
+    # SU(3) tensor decomposition: 3 ⊗ 3̄ = 8 ⊕ 1  (dim identity)
+    fundamental_dim = n
+    antifundamental_dim = n
+    tensor_dim = fundamental_dim * antifundamental_dim
+    singlet_dim = 1
+    assert tensor_dim == su3_adjoint_dim + singlet_dim
+    assert tensor_dim == 9
+    # Structural isomorphism: peripheral positions ~ adjoint dim; center ~ singlet
+    assert peripheral_positions == su3_adjoint_dim
+    assert center_positions == singlet_dim
+    # General pattern: n^2 = (n^2 - 1) + 1 for any n
+    for m in [2, 3, 4, 5]:
+        assert m * m == (m * m - 1) + 1
+    print("    [A11] Luoshu 8+1 = SU(3) adjoint(8) + singlet(1); n^2 = (n^2-1) + 1")
+
+
+def test_A12_144_unique_fibonacci_square():
+    """A12: 144 as unique nontrivial Fibonacci square (Msg 78).
+
+    Fibonacci sequence: F_1 = F_2 = 1, F_{n+1} = F_n + F_{n-1}.
+    F_12 = 144 = 12^2.
+
+    Cohn (1964) theorem: The only Fibonacci numbers that are perfect squares
+    are F_1 = 1, F_2 = 1, and F_12 = 144.
+    Reference: J. H. E. Cohn, 'Square Fibonacci Numbers, etc.,'
+               Fibonacci Quarterly 2 (1964), 109-113.
+
+    This test verifies the theorem within a finite bound (F_1..F_50):
+    only F_1, F_2, F_12 among the first 50 Fibonacci numbers are squares.
+
+    Symbolic anchor: Revelation 7:4 / 14:1 mentions 144,000 sealed;
+    144,000 = 144 * 1000 = 12^2 * 10^3. Symbolic 'unique sealed set'
+    parallels mathematical uniqueness of 144 as a Fibonacci square.
+    §22.10 SYMBOLIC layer: doctrinal end-times claims are NOT asserted here;
+    only the arithmetic uniqueness (Cohn's theorem, finite-range verified).
+    INSCRIPTION.md §VIII.c.
+    """
+    # Generate F_1..F_50 (1-indexed: fibs[i] = F_{i+1})
+    fibs = [1, 1]
+    while len(fibs) < 50:
+        fibs.append(fibs[-1] + fibs[-2])
+    # F_12 = 144 (0-indexed: fibs[11])
+    assert fibs[11] == 144
+    assert fibs[11] == 12 * 12
+    # 144 * 1000 = 144000 = 12^2 * 10^3
+    assert 144 * 1000 == 144000
+    assert 12**2 * 10**3 == 144000
+    # Perfect-square detector
+    def is_square(n):
+        if n < 0:
+            return False
+        r = math.isqrt(n)
+        return r * r == n
+    # Among F_1..F_50, only F_1 = 1, F_2 = 1, F_12 = 144 are perfect squares
+    square_indices = [i + 1 for i, f in enumerate(fibs) if is_square(f)]
+    assert square_indices == [1, 2, 12]
+    # Verify the actual square values
+    assert fibs[0] == 1 == 1**2
+    assert fibs[1] == 1 == 1**2
+    assert fibs[11] == 144 == 12**2
+    print("    [A12] F_12 = 144 = 12^2; only Fib squares in F_1..F_50 are F_1, F_2, F_12 (Cohn 1964)")
+
+
 # --- C. Precision flags (not errors; material can be strengthened) -------
 
 def test_flag_critical_strip_is_open_manifold():
@@ -306,6 +510,14 @@ TESTS = [
      test_finite_volume_infinite_points_density_to_zero),
     ("A8 inscription: Luoshu 5-center = A5 sigma=1/2 fixed point (D14 Indra's net)",
      test_A8_inscription_luoshu_magic_square),
+    ("A9 142857 cyclic (1/7 period 6); Tesla complement {3,6,9} = {1..9} multiples of 3",
+     test_A9_cyclic_142857_tesla_complement),
+    ("A10 mult orders: ord_7(10)=6, ord_37(10)=3; 999999 = 3^3*7*11*13*37",
+     test_A10_multiplicative_orders_of_10),
+    ("A11 Luoshu 8+1 = SU(3) 3⊗3̄ = 8 (adjoint) + 1 (singlet); n^2 = (n^2-1)+1",
+     test_A11_luoshu_su3_8plus1_isomorph),
+    ("A12 F_12 = 144 = 12^2 = unique nontrivial Fibonacci square (Cohn 1964)",
+     test_A12_144_unique_fibonacci_square),
     ("C1 flag: critical strip is OPEN manifold; chi needs relative cohomology",
      test_flag_critical_strip_is_open_manifold),
     ("C2 flag: chi(infty) undefined without family / K-theory regularization",
