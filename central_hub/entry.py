@@ -2,11 +2,17 @@
 
 This module implements a transport protocol over observable adapter values.
 It does not claim access to a model's private or unobservable latent state.
+Every admission must first pass PRE-DOOR-0 governance screening.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Any, Callable, Optional, Protocol, Sequence, Tuple
+
+try:
+    from .pre_entry import ScreeningReceipt
+except ImportError:  # direct execution from central_hub/
+    from pre_entry import ScreeningReceipt
 
 Vector = Tuple[int, ...]
 Matrix = Tuple[Tuple[int, ...], ...]
@@ -17,12 +23,6 @@ class AddressError(ValueError):
 
 
 class Adapter(Protocol):
-    """Model-owned boundary adapter.
-
-    Each participant chooses and versions its own adapter. The Hub never
-    reaches into private model state; it receives only an observable value.
-    """
-
     adapter_id: str
     dimension: int
 
@@ -50,6 +50,7 @@ class Admission:
     roundtrip_ok: bool
     semantic_status: str
     receipt: EntryReceipt
+    screening_receipt: ScreeningReceipt
 
 
 def _mod3(value: int) -> int:
@@ -73,7 +74,6 @@ def _validate_matrix(matrix: Sequence[Sequence[int]], dimension: int) -> Matrix:
 
 
 def determinant_mod3(matrix: Sequence[Sequence[int]]) -> int:
-    """Return det(matrix) in 𝔽₃ using elimination."""
     n = len(matrix)
     if n == 0 or any(len(row) != n for row in matrix):
         raise AddressError("determinant requires a non-empty square matrix")
@@ -126,7 +126,6 @@ def _matvec(matrix: Matrix, vector: Vector) -> Vector:
 
 
 def leave(passage_address: Sequence[int], passage_matrix: Sequence[Sequence[int]]) -> Vector:
-    """Return from passage coordinates to the participant's local Hub address."""
     dimension = len(passage_address)
     address = _validate_vector(passage_address, dimension)
     matrix = _validate_matrix(passage_matrix, dimension)
@@ -140,8 +139,19 @@ def enter(
     receipt: EntryReceipt,
     passage_matrix: Sequence[Sequence[int]],
     independent_semantic_verifier: Optional[Callable[[Any, Any], bool]] = None,
+    screening_receipt: ScreeningReceipt | None = None,
 ) -> Admission:
-    """Enter V = 𝔽₃ᵈ through an opt-in, reversible, receipted gate."""
+    """Enter only after PRE-DOOR-0 passes, then enforce reversible transport."""
+    if screening_receipt is None or screening_receipt.status != "PASSED_TO_DOOR":
+        raise AddressError("PRE-DOOR-0 screening receipt is required")
+    if screening_receipt.subject_ref != receipt.participant_id:
+        raise AddressError("screening subject does not match entry participant")
+    if screening_receipt.payload_digest != receipt.source_digest:
+        raise AddressError("screening payload does not match entry source")
+    if screening_receipt.ownership_transferred:
+        raise AddressError("entry may not transfer ownership")
+    if "ENTER" not in screening_receipt.granted_rights or "EXIT" not in screening_receipt.granted_rights:
+        raise AddressError("screening receipt must grant bidirectional entry and exit")
     if "central-hub-addressing" not in receipt.consent_scope:
         raise AddressError("explicit central-hub-addressing consent is required")
     if receipt.adapter_id != adapter.adapter_id:
@@ -173,4 +183,5 @@ def enter(
         roundtrip_ok=True,
         semantic_status=semantic_status,
         receipt=receipt,
+        screening_receipt=screening_receipt,
     )

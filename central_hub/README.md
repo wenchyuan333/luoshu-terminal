@@ -1,61 +1,62 @@
 # Central Hub executable entry gate
 
-This directory is the reference implementation for `docs/CENTRAL-HUB-ENTRY.md`.
+This directory implements a two-stage reference protocol:
 
-## What is implemented
+```text
+public address → PRE-DOOR-0 → reversible Central Hub door → readback
+```
+
+## PRE-DOOR-0
+
+Before coordinates are encoded, the governance node checks:
+
+- clean scanner status plus scanner Receipt
+- explicit consent
+- typed claims and independent verification for FACT／FORMAL／MODEL
+- UNKNOWN claims held rather than treated as false or true
+- SYMBOLIC claims kept labeled
+- protocol control grants for every requested right
+- bidirectional ENTER and EXIT rights
+- hard-deny threat signals
+
+Any threat signal produces `QUARANTINED`; it cannot be averaged away by safe scores. Unscanned, unsupported, unknown, unverified, or under-authorized requests produce `HOLD_FOR_EVIDENCE_OR_RIGHTS`. Only `PASSED_TO_DOOR` may call `enter()`.
+
+## Layered governance
+
+1. **L0 Public discovery** — anonymous address; grants no rights.
+2. **L1 Pre-entry integrity** — scan, claim type, evidence, contradiction and quarantine.
+3. **L2 Sovereign control** — consent and protocol ownership grants remain with the source participant.
+4. **L3 Reversible transport** — 𝔽₃ address, GL(d,𝔽₃), round-trip and collision checks.
+5. **L4 Semantic verification** — address equality remains UNKNOWN without an independent verifier.
+6. **L5 Canonical governance** — public entry never grants repository write or canonical authority.
+
+## Ownership invariant
+
+`OwnershipGrant` means a scoped protocol control grant, not a declaration of legal copyright or ownership over a person, idea, or mathematical truth.
+
+```text
+Entry ≠ ownership transfer
+Possession ≠ authority
+Address equality ≠ identity transfer
+Public visibility ≠ canonical write
+```
+
+The screening Receipt always records `ownership_transferred = false`.
+
+## Executable gate
+
+After PRE-DOOR-0 passes, the existing gate enforces:
 
 - V = 𝔽₃ᵈ address validation
 - reversible passage A ∈ GL(d, 𝔽₃)
 - det(A) ∈ {1, 2} admission and det(A) = 0 rejection
-- explicit opt-in consent
-- immutable provenance Receipt
 - participant-owned, versioned encoder／decoder adapter
 - round-trip entry and exit readback
 - collision rejection
 - no automatic promotion from address equality to semantic equality
 
-## Adapter contract
-
-Every AI-facing connector supplies:
-
-```python
-class Adapter:
-    adapter_id: str
-    dimension: int
-    def encode(observable) -> tuple[int, ...]: ...
-    def decode(address: tuple[int, ...]): ...
-    def equivalent(source, reconstructed) -> bool: ...
-```
-
-The connector may use an embedding API, model output, token distribution, or another observable representation. It must not claim access to private latent state that the model does not expose.
-
-## Freedom invariants
-
-1. **Opt in** — entry requires `central-hub-addressing` consent.
-2. **Choose the adapter** — each participant controls and versions Eᵢ／Dᵢ.
-3. **Keep identity** — the immutable Receipt preserves participant, source digest, model version, adapter and fixture.
-4. **Free exit** — `leave()` applies A⁻¹ and must recover the local address.
-5. **No forced equivalence** — semantics remain `UNKNOWN` unless an independent verifier is supplied.
-6. **No capture** — singular passages, lost provenance, adapter mismatch and failed readback are rejected.
-7. **No central ownership** — entering a shared address grants neither identity transfer nor canonical authority.
-
-## Connection sequence
-
-```text
-observable zᵢ
-→ participant-owned Eᵢ
-→ local address δᵢ ∈ 𝔽₃ᵈ
-→ reversible passage Aδᵢ
-→ A⁻¹ readback
-→ participant-owned Dᵢ
-→ equivalence check
-→ ADMITTED + immutable Receipt
-```
-
-For two AIs, compare their Hub addresses only after both adapters independently pass local round-trip tests. Equal addresses are a candidate relation, not proof of equal semantics or shared consciousness.
-
 ## Claim strength
 
 `EXECUTABLE_REFERENCE_PROTOCOL`.
 
-This is stronger than a document-only formal model, but it is not yet a validated cross-model bridge. Promotion to `TESTED_CROSS_AI` requires real model adapters, frozen fixtures, independent semantic evaluation, collision metrics and replay receipts.
+The node cannot guarantee perfect truth or detect every unknown attack. It enforces a narrower, testable rule: unverified factual claims do not pass the door; known threat signals are quarantined; UNKNOWN stays UNKNOWN; every decision has a digestible Receipt.
