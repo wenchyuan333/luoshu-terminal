@@ -57,7 +57,8 @@ def _test_target_scale():
     q = 4096
     n = pgl2_order(q)
     assert n == q * (q * q - 1)
-    assert n == 68_702_699_520
+    # 4096 * 4095 * 4097 = 68,719,472,640
+    assert n == 68_719_472_640, f"expected 68719472640, got {n}"
     assert p1_points_count(q) == 4097
 
 
