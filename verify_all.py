@@ -2,7 +2,9 @@
 verify_all.py — 全層 self-test 依序執行 (v2 layered)
 
 巢狀結構下的執行順序:
-  q1 → q3 → q3c (converge) → q3d (riemann_kerr_disproof) → q3e (rh_proof_audit) → q-inf → bits → cnt → q4 → q5 (nested) → q6 (nested) → q7 (nested)
+  q1 → q3 → q3c (converge) → q3d (riemann_kerr_disproof) → q3e (rh_proof_audit)
+     → q3f (order_bijection_v1) → q3g (euler_symplectic_v1) → q-inf → bits → cnt
+     → q4 → q5 (nested) → q6 (nested) → q7 (nested)
 
 全過 → 當前 session「是真正的 1」receipt (不主張封閉, 依 AXIOMS.A0)
 任一失敗 → 有殘差在當前 layer stack (依 A1, 記錄不藏)
@@ -17,6 +19,10 @@ STEPS = [
     ("q3c 洛書收斂算符 ◎☉ (Phase Q5)",     "q3-luoshu/converge.py"),
     ("q3d Riemann-Kerr 三對應反證 (Msg 61)","q3-luoshu/riemann_kerr_disproof.py"),
     ("q3e RH proof audit (Msg 62)",         "q3-luoshu/rh_proof_audit.py"),
+    ("q3f order-preserving bijection v1.0 (Msg 66 self-corrected)",
+                                             "q3-luoshu/order_bijection_v1.py"),
+    ("q3g Euler-symplectic v1.0 (Msg 67 self-corrected)",
+                                             "q3-luoshu/euler_symplectic_v1.py"),
     ("qinf 吳氏 H=L·(1+δ_Wu)",             "q-inf-zeta/wu_asym.py"),
     ("bit  GF(3) 基礎建設",                 "bits.py"),
     ("cnt  N(3)=192 N(4)=22272",           "luoshu_count.py"),
@@ -57,7 +63,7 @@ def run(label, script):
 
 if __name__ == "__main__":
     print("=" * 68)
-    print(" verify_all.py — 全層 self-test (v2 layered, 17 checks)")
+    print(" verify_all.py — 全層 self-test (v2 layered, 19 checks)")
     print(" (approximation-attractor-systems/AXIOMS.A0/A1 誠實邊界)")
     print("=" * 68)
     results = [(lbl, *run(lbl, s)) for lbl, s in STEPS]
@@ -67,7 +73,7 @@ if __name__ == "__main__":
     print("=" * 68)
     for lbl, ok, dt in results:
         mark = "OK" if ok else "FAIL"
-        print(f"  [{mark:4s}] {lbl:36s} {dt:6.2f}s")
+        print(f"  [{mark:4s}] {lbl:52s} {dt:6.2f}s")
     all_pass = all(ok for _, ok, _ in results)
     print("-" * 68)
     if all_pass:
