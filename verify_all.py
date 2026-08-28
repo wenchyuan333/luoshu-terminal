@@ -11,6 +11,7 @@ STEPS = [
     ("q3e RH proof audit", "q3-luoshu/rh_proof_audit.py"),
     ("q3f order-preserving bijection", "q3-luoshu/order_bijection_v1.py"),
     ("q3g Euler-symplectic", "q3-luoshu/euler_symplectic_v1.py"),
+    ("hub Central Hub reversible entry gate", "central_hub/self_test.py"),
     ("qinf 吳氏 H=L·(1+δ_Wu)", "q-inf-zeta/wu_asym.py"),
     ("bit GF(3) 基礎建設", "bits.py"),
     ("cnt N(3)=192 N(4)=22272", "luoshu_count.py"),
